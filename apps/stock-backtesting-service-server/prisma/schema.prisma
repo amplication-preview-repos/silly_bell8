@@ -1,0 +1,53 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Strategy {
+  backtestResults BacktestResult[]
+  code            String?
+  createdAt       DateTime         @default(now())
+  description     String?
+  id              String           @id @default(cuid())
+  name            String?
+  updatedAt       DateTime         @updatedAt
+}
+
+model MarketData {
+  closePrice Float?
+  createdAt  DateTime  @default(now())
+  date       DateTime?
+  highPrice  Float?
+  id         String    @id @default(cuid())
+  lowPrice   Float?
+  openPrice  Float?
+  updatedAt  DateTime  @updatedAt
+  volume     Int?
+}
+
+model BacktestResult {
+  backtestDate   DateTime?
+  createdAt      DateTime  @default(now())
+  finalCapital   Float?
+  id             String    @id @default(cuid())
+  initialCapital Float?
+  strategy       Strategy? @relation(fields: [strategyId], references: [id])
+  strategyId     String?
+  updatedAt      DateTime  @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
